@@ -19,16 +19,28 @@ const loading = ref(false)
 
 // 登录逻辑
 const handleLogin = async () => {
-  loading.value = true
+  // 开始加载
+  loading.value = true; 
+  // 清空成功消息
+  success.value = ''; 
+  // 清空错误消息
+  error.value = ''; 
   try {
-    await auth.login(name.value, password.value)
-    success.value = '登录成功'
-    error.value = ''
-    router.push('/dashboard')
+    // 调用登录 API
+    const response = await auth.login(name.value, password.value);
+
+    if (response) {
+      success.value = '登录成功';
+      // 捕获非成功的逻辑
+      router.push('/dashboard'); 
+    } else {
+      // 捕获非成功的逻辑
+      error.value = '登录失败，请检查用户名和密码'; 
+    }
   } catch (e) {
     error.value = '登录失败，请检查用户名和密码'
-    success.value = ''
   } finally {
+    // 捕获非成功的逻辑
     loading.value = false
   }
 }
@@ -40,7 +52,8 @@ const handleRegister = async () => {
     await auth.register(name.value, password.value)
     success.value = '注册成功，请登录'
     error.value = ''
-    formType.value = 'login' // 切换到登录表单
+    // 切换到登录表单
+    formType.value = 'login' 
   } catch (e) {
     error.value = '注册失败，请检查用户名是否已存在'
     success.value = ''
