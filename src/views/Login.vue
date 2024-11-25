@@ -20,11 +20,11 @@ const loading = ref(false)
 // 登录逻辑
 const handleLogin = async () => {
   // 开始加载
-  loading.value = true; 
+  loading.value = true;
   // 清空成功消息
-  success.value = ''; 
+  success.value = '';
   // 清空错误消息
-  error.value = ''; 
+  error.value = '';
   try {
     // 调用登录 API
     const response = await auth.login(name.value, password.value);
@@ -32,10 +32,10 @@ const handleLogin = async () => {
     if (response) {
       success.value = '登录成功';
       // 捕获非成功的逻辑
-      router.push('/dashboard'); 
+      router.push('/dashboard');
     } else {
       // 捕获非成功的逻辑
-      error.value = '登录失败，请检查用户名和密码'; 
+      error.value = '登录失败，请检查用户名和密码';
     }
   } catch (e) {
     error.value = '登录失败，请检查用户名和密码'
@@ -47,47 +47,60 @@ const handleLogin = async () => {
 
 // 注册逻辑
 const handleRegister = async () => {
-  loading.value = true
+  // 开始加载
+  loading.value = true;
+  // 清空状态消息
+  success.value = '';
+  error.value = '';
   try {
-    await auth.register(name.value, password.value)
-    success.value = '注册成功，请登录'
-    error.value = ''
-    // 切换到登录表单
-    formType.value = 'login' 
+    // 调用注册 API
+    const response = await auth.register(name.value, password.value);
+
+    if (response) {
+      success.value = '注册成功，请登录';
+      formType.value = 'login'; // 切换到登录表单
+    } else {
+      error.value = '注册失败，请检查';
+    }
   } catch (e) {
-    error.value = '注册失败，请检查用户名是否已存在'
-    success.value = ''
+    error.value = '注册失败，请稍后重试';
   } finally {
-    loading.value = false
+    // 停止加载
+    loading.value = false;
   }
-}
+};
 
 // 找回密码逻辑
 const handleUpdatePassword = async () => {
   if (!name.value || !newPassword.value) {
-    error.value = '用户名和新密码不能为空'
-    success.value = ''
-    return
+    error.value = '用户名和新密码不能为空';
+    success.value = '';
+    return;
   }
 
-  loading.value = true
+  loading.value = true;
   try {
     // 调用找回密码 API
-    await auth.resetPassword(name.value, newPassword.value)
+    const response = await auth.resetPassword(name.value, newPassword.value);
 
-    success.value = '密码重置成功，请重新登录'
-    error.value = ''
-    formType.value = 'login' // 切换回登录表单
+    if (response) {
+      success.value = '密码重置成功，请重新登录';
+      error.value = '';
+      formType.value = 'login'; // 切换回登录表单
+    } else {
+      error.value = '密码重置失败，请检查输入或稍后再试';
+      success.value = '';
+    }
   } catch (e) {
-    error.value = '密码重置失败，请检查输入或稍后再试'
-    success.value = ''
+    error.value = '密码重置失败，请稍后重试';
+    success.value = '';
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-}
+};
 
 // 切换表单逻辑
-const switchForm = (type: 'login' | 'register' | 'updatePassword') => {
+const switchForm = (type: 'login' | 'register' | 'updatePassword' ) => {
   formType.value = type
   error.value = '' // 清空错误提示
   success.value = '' // 清空成功提示
