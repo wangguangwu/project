@@ -135,7 +135,8 @@ const resetForm = () => {
     <div class="max-w-md w-full bg-white rounded-xl shadow-lg p-8">
       <div class="text-center mb-6">
         <h2 class="text-2xl font-bold text-gray-800">
-          {{ formType === 'login' ? '登录' : formType === 'register' ? '注册' : formType === 'updatePassword' ? '更新密码' : '找回密码' }}
+          {{ formType === 'login' ? '登录' : formType === 'register' ? '注册' : formType === 'updatePassword' ? '更新密码' :
+          '找回密码' }}
         </h2>
       </div>
 
@@ -167,6 +168,38 @@ const resetForm = () => {
         <div class="mt-2 text-center">
           <button class="text-sm text-blue-500 hover:text-blue-600" @click="switchForm('resetPassword')">
             忘记密码？找回密码
+          </button>
+        </div>
+      </form>
+
+      <!-- 注册表单 -->
+      <form v-else-if="formType === 'register'" @submit.prevent="handleRegister" class="space-y-6">
+        <div>
+          <label for="name" class="block text-sm font-medium text-gray-700 mb-2 required">用户名</label>
+          <input id="name" v-model="name" type="text" required class="auth-input" :disabled="loading" />
+        </div>
+        <div>
+          <label for="password" class="block text-sm font-medium text-gray-700 mb-2 required">密码</label>
+          <input id="password" v-model="password" type="password" required class="auth-input" :disabled="loading" />
+        </div>
+        <div>
+          <label for="confirmPassword" class="block text-sm font-medium text-gray-700 mb-2 required">确认密码</label>
+          <input id="confirmPassword" v-model="confirmPassword" type="password" required class="auth-input"
+            :disabled="loading" />
+        </div>
+        <div v-if="error" class="text-error text-sm text-center">{{ error }}</div>
+        <div v-if="success" class="text-success text-sm text-center">{{ success }}</div>
+        <div class="flex gap-4">
+          <button type="submit" class="primary-button" :disabled="loading">
+            {{ loading ? '注册中...' : '注册' }}
+          </button>
+          <button type="button" class="secondary-button" @click="resetForm" :disabled="loading">
+            重置
+          </button>
+        </div>
+        <div class="mt-4 text-center">
+          <button class="text-sm text-blue-500 hover:text-blue-600" @click="switchForm('login')">
+            已有账户？立即登录
           </button>
         </div>
       </form>
